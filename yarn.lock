@@ -3403,7 +3403,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^19.2.0":
+"@types/react@npm:^19.2.0, @types/react@npm:~19.2.10":
   version: 19.2.17
   resolution: "@types/react@npm:19.2.17"
   dependencies:
@@ -9178,6 +9178,7 @@ __metadata:
   resolution: "react-native-release-health-example@workspace:example"
   dependencies:
     "@expo/metro-runtime": "npm:~55.0.12"
+    "@types/react": "npm:~19.2.10"
     expo: "npm:~55.0.28"
     expo-dev-client: "npm:~55.0.37"
     expo-status-bar: "npm:~55.0.6"
@@ -9188,6 +9189,7 @@ __metadata:
     react-native-monorepo-config: "npm:^0.4.0"
     react-native-release-health: "workspace:*"
     react-native-web: "npm:~0.21.0"
+    typescript: "npm:^6.0.3"
   languageName: unknown
   linkType: soft
 
