@@ -1,0 +1,34 @@
+name: Feature request
+description: Propose an improvement or new capability
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The project follows a phased roadmap, so even good ideas may wait until the current phase ships.
+
+        Please note the following are out of scope and will not be accepted:
+        - Delivering updates (downloading, hosting, or applying OTA bundles is the vendor's job)
+        - Crash reporting (we correlate crashes with releases; we do not capture or symbolicate stack traces)
+        - A hosted server or dashboard (sinks export events; bring your own backend)
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to do that you currently cannot? Describe the use case, not the solution.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How would you like it to work? API sketches welcome.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What workarounds or other approaches have you tried or considered?
+    validations:
+      required: false

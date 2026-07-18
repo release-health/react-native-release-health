@@ -1,0 +1,45 @@
+{
+  "name": "release-health-monorepo",
+  "private": true,
+  "description": "Monorepo for react-native-release-health and its adapters and sinks",
+  "workspaces": [
+    "packages/*",
+    "example"
+  ],
+  "scripts": {
+    "example": "yarn workspace react-native-release-health-example",
+    "core": "yarn workspace react-native-release-health",
+    "typecheck": "yarn workspace react-native-release-health typecheck",
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "test": "yarn workspace react-native-release-health test",
+    "build": "yarn workspace react-native-release-health prepare",
+    "clean": "yarn workspace react-native-release-health clean",
+    "changeset": "changeset"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.29.0",
+    "@eslint/compat": "^2.1.0",
+    "@eslint/eslintrc": "^3.3.5",
+    "@eslint/js": "^10.0.1",
+    "@react-native/babel-preset": "0.85.0",
+    "@react-native/eslint-config": "0.85.0",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-ft-flow": "^3.0.11",
+    "eslint-plugin-prettier": "^5.5.6",
+    "prettier": "^3.8.3",
+    "turbo": "^2.9.16",
+    "typescript": "^6.0.3"
+  },
+  "packageManager": "yarn@4.11.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "prettier": {
+    "quoteProps": "consistent",
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5",
+    "useTabs": false
+  }
+}

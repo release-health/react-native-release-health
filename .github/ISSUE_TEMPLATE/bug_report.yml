@@ -1,0 +1,58 @@
+name: Bug report
+description: Something is broken or behaving unexpectedly
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      description: Which package is affected?
+      options:
+        - react-native-release-health (core)
+        - adapter-expo-updates
+        - adapter-hot-updater
+        - sink-http
+        - sink-sentry
+        - Not sure
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      placeholder: e.g. 0.2.1
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Platform and versions where the bug occurs.
+      placeholder: |
+        - OS / device: iOS 18.5 (iPhone 15) / Android 15 (Pixel 8)
+        - react-native: 0.83.x (New Architecture)
+        - Node: 20.x
+        - Expo SDK (if applicable): 54, dev-client or bare
+        - OTA vendor + version: expo-updates x.y.z / hot-updater x.y.z
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Minimal steps, ideally against the example app. For update-related bugs, include how the update was published and what happened on the next launch.
+      placeholder: |
+        1. Publish update ...
+        2. Relaunch the app ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected-actual
+    attributes:
+      label: Expected vs actual behavior
+      placeholder: |
+        Expected: markHealthy() clears probation and emits update_apply_success.
+        Actual: second launch emits rollback_recommended even though the app was healthy.
+    validations:
+      required: true

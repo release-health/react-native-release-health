@@ -1,0 +1,43 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [".nvmrc", "pnpm-workspace.yaml", ".npmrc"],
+  "globalEnv": ["NODE_ENV"],
+  "tasks": {
+    "build:android": {
+      "env": ["ANDROID_HOME", "ORG_GRADLE_PROJECT_newArchEnabled"],
+      "inputs": [
+        "package.json",
+        "android",
+        "!android/.gradle",
+        "!android/build",
+        "!android/app/build",
+        "$TURBO_ROOT$/packages/core/package.json",
+        "$TURBO_ROOT$/packages/core/android",
+        "!$TURBO_ROOT$/packages/core/android/build",
+        "$TURBO_ROOT$/packages/core/src/*.ts",
+        "$TURBO_ROOT$/packages/core/src/*.tsx"
+      ],
+      "outputs": []
+    },
+    "build:ios": {
+      "env": [
+        "RCT_NEW_ARCH_ENABLED",
+        "RCT_REMOVE_LEGACY_ARCH",
+        "RCT_USE_RN_DEP",
+        "RCT_USE_PREBUILT_RNCORE"
+      ],
+      "inputs": [
+        "package.json",
+        "ios",
+        "!ios/build",
+        "!ios/Pods",
+        "$TURBO_ROOT$/packages/core/package.json",
+        "$TURBO_ROOT$/packages/core/*.podspec",
+        "$TURBO_ROOT$/packages/core/ios",
+        "$TURBO_ROOT$/packages/core/src/*.ts",
+        "$TURBO_ROOT$/packages/core/src/*.tsx"
+      ],
+      "outputs": []
+    }
+  }
+}
