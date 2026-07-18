@@ -1,12 +1,54 @@
-import { useCallback, useState } from 'react';
-import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
 import {
+  Button,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import {
+  ReleaseHealth,
   ReleaseHealthNative,
+  useReleaseHealth,
   type BuildInfo,
+  type OtaAdapter,
   type PendingUpdate,
+  type RollbackRecommendation,
 } from 'react-native-release-health';
+import { httpSink } from '@release-health/sink-http';
+
+// Local event receiver (start it with `yarn receiver` at the repo root).
+// The Android emulator reaches the host machine at 10.0.2.2; iOS simulator
+// and web can use localhost. On a physical device, use your machine's LAN IP.
+const RECEIVER_URL = Platform.select({
+  android: 'http://10.0.2.2:8787/events',
+  default: 'http://localhost:8787/events',
+});
+
+// Placeholder adapter until the expo-updates adapter ships: always reports
+// the embedded bundle and no vendor events.
+const embeddedOnlyAdapter: OtaAdapter = {
+  getActiveUpdateId: async () => null,
+  getEmbeddedVersion: async () => '1.0.0',
+  onEvent: () => () => {},
+};
+
+ReleaseHealth.init({
+  adapter: embeddedOnlyAdapter,
+  sinks: [httpSink({ url: RECEIVER_URL, flushIntervalMs: 2000 })],
+  cohort: 'example-app',
+}).catch((error) => {
+  console.warn(`ReleaseHealth failed to initialize: ${String(error)}`);
+});
 
 export default function App() {
+  const health = useReleaseHealth();
+  const [recommendation, setRecommendation] =
+    useState<RollbackRecommendation | null>(null);
+
+  useEffect(() => ReleaseHealth.onRollbackRecommended(setRecommendation), []);
+
   const [buildInfo] = useState<BuildInfo>(() =>
     ReleaseHealthNative.getBuildInfo()
   );
@@ -44,6 +86,27 @@ export default function App() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.heading}>Release health</Text>
+      <Text>Status: {health.status}</Text>
+      <Text>Active update: {health.activeUpdateId ?? 'embedded bundle'}</Text>
+      <Text>Cohort: {health.cohort ?? 'none'}</Text>
+      {recommendation ? (
+        <Text style={styles.alert}>
+          Rollback recommended for {recommendation.updateId} (
+          {recommendation.reason})
+        </Text>
+      ) : null}
+      <Text style={styles.hint}>
+        Events stream to {RECEIVER_URL}; run "yarn receiver" at the repo root to
+        watch them.
+      </Text>
+      <View style={styles.buttonRow}>
+        <Button
+          title="Mark healthy"
+          onPress={() => ReleaseHealth.markHealthy()}
+        />
+      </View>
+
       <Text style={styles.heading}>Build info</Text>
       <Text>Version: {buildInfo.version}</Text>
       <Text>Build number: {buildInfo.buildNumber}</Text>
@@ -99,6 +162,10 @@ const styles = StyleSheet.create({
   hint: {
     fontSize: 12,
     color: '#666',
+  },
+  alert: {
+    color: '#b00020',
+    fontWeight: '700',
   },
   buttonRow: {
     marginTop: 12,

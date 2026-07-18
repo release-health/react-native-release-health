@@ -48,7 +48,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.11.6, @babel/core@npm:^7.12.3, @babel/core@npm:^7.20.0, @babel/core@npm:^7.23.9, @babel/core@npm:^7.24.4, @babel/core@npm:^7.25.2, @babel/core@npm:^7.29.0":
+"@babel/core@npm:^7.11.6, @babel/core@npm:^7.12.3, @babel/core@npm:^7.20.0, @babel/core@npm:^7.23.9, @babel/core@npm:^7.24.4, @babel/core@npm:^7.25.0, @babel/core@npm:^7.25.2, @babel/core@npm:^7.29.0":
   version: 7.29.7
   resolution: "@babel/core@npm:7.29.7"
   dependencies:
@@ -1406,7 +1406,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-env@npm:^7.29.2":
+"@babel/preset-env@npm:^7.25.0, @babel/preset-env@npm:^7.29.2":
   version: 7.29.7
   resolution: "@babel/preset-env@npm:7.29.7"
   dependencies:
@@ -1516,7 +1516,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-typescript@npm:^7.23.0, @babel/preset-typescript@npm:^7.28.5":
+"@babel/preset-typescript@npm:^7.23.0, @babel/preset-typescript@npm:^7.24.0, @babel/preset-typescript@npm:^7.28.5":
   version: 7.29.7
   resolution: "@babel/preset-typescript@npm:7.29.7"
   dependencies:
@@ -3223,6 +3223,24 @@ __metadata:
   checksum: 10c0/627930ee02eaa64dd6272d07ccddf5abd62d7cf30949f4df51836b65335c2e080a3a71823f03fc7c0f7fa85671aa591a54c3852e1261004e7c67a37a53eef860
   languageName: node
   linkType: hard
+
+"@release-health/sink-http@workspace:*, @release-health/sink-http@workspace:packages/sink-http":
+  version: 0.0.0-use.local
+  resolution: "@release-health/sink-http@workspace:packages/sink-http"
+  dependencies:
+    "@babel/core": "npm:^7.25.0"
+    "@babel/preset-env": "npm:^7.25.0"
+    "@babel/preset-typescript": "npm:^7.24.0"
+    "@jest/globals": "npm:^29.7.0"
+    del-cli: "npm:^7.0.0"
+    jest: "npm:^29.7.0"
+    react-native-builder-bob: "npm:^0.43.0"
+    react-native-release-health: "workspace:*"
+    typescript: "npm:^6.0.3"
+  peerDependencies:
+    react-native-release-health: "*"
+  languageName: unknown
+  linkType: soft
 
 "@sinclair/typebox@npm:^0.27.8":
   version: 0.27.12
@@ -9178,6 +9196,7 @@ __metadata:
   resolution: "react-native-release-health-example@workspace:example"
   dependencies:
     "@expo/metro-runtime": "npm:~55.0.12"
+    "@release-health/sink-http": "workspace:*"
     "@types/react": "npm:~19.2.10"
     expo: "npm:~55.0.28"
     expo-dev-client: "npm:~55.0.37"
