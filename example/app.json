@@ -3,6 +3,17 @@
     "name": "ReleaseHealth Example",
     "slug": "react-native-release-health-example",
     "version": "1.0.0",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/54e6a7aa-0015-463a-8098-1e79169bd454",
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0,
+      "requestHeaders": {
+        "expo-channel-name": "production"
+      }
+    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -26,6 +37,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "54e6a7aa-0015-463a-8098-1e79169bd454"
+      }
+    },
+    "owner": "amrithvengalath"
   }
 }

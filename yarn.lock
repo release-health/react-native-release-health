@@ -3224,6 +3224,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@release-health/adapter-expo-updates@workspace:*, @release-health/adapter-expo-updates@workspace:packages/adapter-expo-updates":
+  version: 0.0.0-use.local
+  resolution: "@release-health/adapter-expo-updates@workspace:packages/adapter-expo-updates"
+  dependencies:
+    "@babel/core": "npm:^7.25.0"
+    "@babel/preset-env": "npm:^7.25.0"
+    "@babel/preset-typescript": "npm:^7.24.0"
+    "@jest/globals": "npm:^29.7.0"
+    del-cli: "npm:^7.0.0"
+    jest: "npm:^29.7.0"
+    react-native-builder-bob: "npm:^0.43.0"
+    react-native-release-health: "workspace:*"
+    typescript: "npm:^6.0.3"
+  peerDependencies:
+    expo-updates: ">=55.0.0"
+    react-native-release-health: "*"
+  languageName: unknown
+  linkType: soft
+
 "@release-health/sink-http@workspace:*, @release-health/sink-http@workspace:packages/sink-http":
   version: 0.0.0-use.local
   resolution: "@release-health/sink-http@workspace:packages/sink-http"
@@ -3765,6 +3784,13 @@ __metadata:
     normalize-path: "npm:^3.0.0"
     picomatch: "npm:^2.0.4"
   checksum: 10c0/57b06ae984bc32a0d22592c87384cd88fe4511b1dd7581497831c56d41939c8a001b28e7b853e1450f2bf61992dfcaa8ae2d0d161a0a90c4fb631ef07098fbac
+  languageName: node
+  linkType: hard
+
+"arg@npm:^4.1.0":
+  version: 4.1.3
+  resolution: "arg@npm:4.1.3"
+  checksum: 10c0/070ff801a9d236a6caa647507bdcc7034530604844d64408149a26b9e87c2f97650055c0f049abd1efc024b334635c01f29e0b632b371ac3f26130f4cf65997a
   languageName: node
   linkType: hard
 
@@ -5654,6 +5680,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-eas-client@npm:~55.0.5":
+  version: 55.0.5
+  resolution: "expo-eas-client@npm:55.0.5"
+  checksum: 10c0/961c80ba17e382d77f014b0b3f3fb8014a569f0e219eaa2cc2b9816e758545e6bb9056c244ea67cb3a13f59e7f631e76da3481fa2bf53db5dc6a7f723282ecfc
+  languageName: node
+  linkType: hard
+
 "expo-file-system@npm:~55.0.24":
   version: 55.0.24
   resolution: "expo-file-system@npm:55.0.24"
@@ -5754,12 +5787,47 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-structured-headers@npm:~55.0.2":
+  version: 55.0.2
+  resolution: "expo-structured-headers@npm:55.0.2"
+  checksum: 10c0/06483f6e29c54f6bfe579dd31f94754051e4b8e2dd8c860f8b67388e5f2231492ce9ec981c198b9610944b0ca6333ccc868eff1e0b9f4bf3e6bff9647f708f4a
+  languageName: node
+  linkType: hard
+
 "expo-updates-interface@npm:~55.1.6":
   version: 55.1.6
   resolution: "expo-updates-interface@npm:55.1.6"
   peerDependencies:
     expo: "*"
   checksum: 10c0/e876208cdec1890a34b45002d7d1f2d36f86b610207ef3c1b60fdd85c6d4d8358bde612711b306add34b62a7f2afac9c9553843ebb3a8cf097b59cbef4c87bc1
+  languageName: node
+  linkType: hard
+
+"expo-updates@npm:~55.0.26":
+  version: 55.0.26
+  resolution: "expo-updates@npm:55.0.26"
+  dependencies:
+    "@expo/code-signing-certificates": "npm:^0.0.6"
+    "@expo/plist": "npm:^0.5.4"
+    "@expo/spawn-async": "npm:^1.7.2"
+    arg: "npm:^4.1.0"
+    chalk: "npm:^4.1.2"
+    debug: "npm:^4.3.4"
+    expo-eas-client: "npm:~55.0.5"
+    expo-manifests: "npm:~55.0.19"
+    expo-structured-headers: "npm:~55.0.2"
+    expo-updates-interface: "npm:~55.1.6"
+    getenv: "npm:^2.0.0"
+    glob: "npm:^13.0.0"
+    ignore: "npm:^5.3.1"
+    resolve-from: "npm:^5.0.0"
+  peerDependencies:
+    expo: "*"
+    react: "*"
+    react-native: "*"
+  bin:
+    expo-updates: bin/cli.js
+  checksum: 10c0/c5661fc754d6a24c6d72d0949280c322ef57fe2bd28c0007ce5addc8e040d2ad617083ba0fa8b395a4bf88aad8e0645bd00f768a57d1bfbef724b1bd20e50da3
   languageName: node
   linkType: hard
 
@@ -9196,11 +9264,13 @@ __metadata:
   resolution: "react-native-release-health-example@workspace:example"
   dependencies:
     "@expo/metro-runtime": "npm:~55.0.12"
+    "@release-health/adapter-expo-updates": "workspace:*"
     "@release-health/sink-http": "workspace:*"
     "@types/react": "npm:~19.2.10"
     expo: "npm:~55.0.28"
     expo-dev-client: "npm:~55.0.37"
     expo-status-bar: "npm:~55.0.6"
+    expo-updates: "npm:~55.0.26"
     react: "npm:19.2.0"
     react-dom: "npm:19.2.0"
     react-native: "npm:0.83.10"

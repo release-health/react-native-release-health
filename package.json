@@ -10,6 +10,7 @@
     "example": "yarn workspace react-native-release-health-example",
     "core": "yarn workspace react-native-release-health",
     "sink-http": "yarn workspace @release-health/sink-http",
+    "adapter-expo-updates": "yarn workspace @release-health/adapter-expo-updates",
     "typecheck": "yarn workspaces foreach -A --exclude release-health-monorepo run typecheck",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "test": "yarn workspaces foreach -A --exclude release-health-monorepo run test",

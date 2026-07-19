@@ -72,3 +72,7 @@ DerivedData/
 # Generated native code (codegen)
 android/generated/
 ios/generated/
+
+# Demo recordings (hosted as release assets, not tracked in git)
+docs/assets/*.mov
+docs/assets/*.mp4
