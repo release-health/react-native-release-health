@@ -135,6 +135,12 @@ jobs:
       TURBO_CACHE_DIR: .turbo/ios
       RCT_USE_RN_DEP: 1
       RCT_USE_PREBUILT_RNCORE: 1
+      # The example bundles the Sentry config plugin, whose "Bundle React Native
+      # code and images" build phase shells out to sentry-cli to upload source
+      # maps. With no Sentry org/auth configured in CI that step errors out
+      # ("An organization ID or slug is required"), failing the build. CI only
+      # needs the app to compile, so skip the upload.
+      SENTRY_DISABLE_AUTO_UPLOAD: true
 
     steps:
       - name: Checkout
