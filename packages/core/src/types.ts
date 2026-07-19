@@ -92,6 +92,22 @@ export type ReleaseHealthEvent = EventEnvelope &
   );
 
 /**
+ * Live engine state handed to sinks that implement `Sink.attach`. Lets a
+ * sink observe health-status transitions (probation, suspect, failed...)
+ * that are states rather than events, e.g. to tag a crash reporter.
+ */
+export type SinkContext = {
+  /** Current engine state; safe to call at any time after attach. */
+  getSnapshot(): {
+    status: HealthStatus;
+    activeUpdateId: string | null;
+    sessionId: string;
+  };
+  /** Subscribe to status transitions. Returns an unsubscribe function. */
+  onStatusChange(cb: () => void): Unsubscribe;
+};
+
+/**
  * Receives the event stream. Sink failures are swallowed by the engine and
  * must never take the host app down.
  */
@@ -99,6 +115,12 @@ export interface Sink {
   onEvent(event: ReleaseHealthEvent): void;
   /** Force buffered events out, e.g. right before a fatal crash. */
   flush?(): Promise<void>;
+  /**
+   * Called once by the engine during `start()`, before the first event is
+   * delivered. Optional; sinks that only consume events can omit it. An
+   * exception thrown here is swallowed and logged, never rethrown.
+   */
+  attach?(context: SinkContext): void;
 }
 
 /** Overall health of the currently running bundle. */

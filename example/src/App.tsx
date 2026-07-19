@@ -16,8 +16,10 @@ import {
   type RollbackRecommendation,
 } from 'react-native-release-health';
 import { httpSink } from '@release-health/sink-http';
+import { sentrySink } from '@release-health/sink-sentry';
 import { expoUpdatesAdapter } from '@release-health/adapter-expo-updates';
 import * as Updates from 'expo-updates';
+import * as Sentry from '@sentry/react-native';
 
 // Local event receiver (start it with `yarn receiver` at the repo root).
 // The Android emulator reaches the host machine at 10.0.2.2; iOS simulator
@@ -33,11 +35,25 @@ const RECEIVER_URL = Platform.select({
 // rollback banner visible on screen during the demo recording.
 const DEMO_CRASH = false;
 
-// Passing the module explicitly gives a compile-time check that the
-// installed expo-updates still matches the shape the adapter expects.
+// Sentry DSN for the crash-segmentation demo (docs/demo.md). A DSN is not a
+// secret, so it is safe to commit. Left empty here, which keeps Sentry a
+// disabled no-op; set it to run the demo and see issues tagged by ota.update_id
+// and ota.status.
+const SENTRY_DSN = '';
+
+// Initialize Sentry before ReleaseHealth so the Sentry sink can set OTA tags
+// on the scope during init. An empty DSN disables Sentry without erroring.
+Sentry.init({ dsn: SENTRY_DSN });
+
+// Passing the modules explicitly gives a compile-time check that the installed
+// expo-updates and @sentry/react-native still match the shapes the adapter and
+// sink expect.
 ReleaseHealth.init({
   adapter: expoUpdatesAdapter({ updatesModule: Updates }),
-  sinks: [httpSink({ url: RECEIVER_URL, flushIntervalMs: 2000 })],
+  sinks: [
+    httpSink({ url: RECEIVER_URL, flushIntervalMs: 2000 }),
+    sentrySink({ sentry: Sentry }),
+  ],
   cohort: 'example-app',
 }).catch((error) => {
   console.warn(`ReleaseHealth failed to initialize: ${String(error)}`);

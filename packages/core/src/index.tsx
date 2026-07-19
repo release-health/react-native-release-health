@@ -22,6 +22,7 @@ export type {
   RollbackReason,
   RollbackRecommendation,
   Sink,
+  SinkContext,
   Unsubscribe,
 } from './types';
 export { HealthEngine } from './engine';

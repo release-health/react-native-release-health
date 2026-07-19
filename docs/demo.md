@@ -108,6 +108,34 @@ Note: a rollback-to-embedded stages the embedded bundle as the newest update, so
 | Relaunch (launch 2) | `session_start`, `update_apply_failed (crash-loop)`, `rollback_recommended (crash-loop)` |
 | After server rollback | `session_start (updateId: null)` |
 
+## Verify Sentry segmentation (optional)
+
+The example also ships `@release-health/sink-sentry`, which tags every Sentry event with `ota.update_id` and `ota.status` and captures the rollback recommendation as its own issue. This is the acceptance test for the Sentry sink: a crash that happens while a fresh update is on probation shows up in Sentry already segmented by which update caused it.
+
+1. Create a Sentry project (platform: React Native) and copy its DSN. A DSN is not a secret; it is safe to commit.
+2. Put the DSN into `example/src/App.tsx`:
+
+   ```diff
+   -const SENTRY_DSN = '';
+   +const SENTRY_DSN = 'https://<key>@<org>.ingest.sentry.io/<project>';
+   ```
+
+3. Rebuild the release app. The build has a "Upload Debug Symbols to Sentry" phase that expects a `SENTRY_AUTH_TOKEN`; the demo does not need symbolication, so skip the upload:
+
+   ```sh
+   cd example
+   export SENTRY_DISABLE_AUTO_UPLOAD=true
+   npx expo run:ios --configuration Release
+   ```
+
+   Stacks in Sentry will be unsymbolicated, which is fine here; the point of the demo is the tags, not the line numbers.
+4. Run the crash-loop steps above. Then, in Sentry:
+   - The fatal-error issue from launch 1 carries the tags `ota.update_id: <bad update id>` and `ota.status: probation`. Filter the issue list by `ota.update_id` to see everything a single rollout caused.
+   - Launch 2 produces a second issue, the message `OTA rollback recommended for update <bad update id> (crash-loop)`, tagged `ota.status: failed`.
+   - The OTA timeline (`session_start`, `update_downloaded`, `crash`) appears as `ota` breadcrumbs on each issue.
+
+The crash itself is captured once, by Sentry's own error handler; the sink adds the OTA context and does not re-capture it, so you get one issue per crash, not two.
+
 ## Recording
 
 ```sh

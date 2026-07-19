@@ -62,6 +62,7 @@ jobs:
           cd packages/core && npm publish --dry-run
           cd ../sink-http && npm publish --dry-run
           cd ../adapter-expo-updates && npm publish --dry-run
+          cd ../sink-sentry && npm publish --dry-run
 
   build-android:
     runs-on: ubuntu-latest

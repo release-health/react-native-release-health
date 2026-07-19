@@ -114,6 +114,23 @@ export class HealthEngine {
       );
     }
 
+    for (const sink of this.deps.sinks) {
+      if (sink.attach === undefined) {
+        continue;
+      }
+      try {
+        sink.attach({
+          getSnapshot: () => this.getSnapshot(),
+          onStatusChange: (cb) => this.onStatusChange(cb),
+        });
+      } catch (error) {
+        this.warn(
+          `ReleaseHealth: a sink threw from attach() and will not receive ` +
+            `status updates: ${String(error)}`
+        );
+      }
+    }
+
     this.emit({
       type: 'session_start',
       updateId: this.activeUpdateId,

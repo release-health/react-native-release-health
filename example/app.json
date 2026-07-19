@@ -43,6 +43,9 @@
         "projectId": "54e6a7aa-0015-463a-8098-1e79169bd454"
       }
     },
-    "owner": "amrithvengalath"
+    "owner": "amrithvengalath",
+    "plugins": [
+      "@sentry/react-native"
+    ]
   }
 }

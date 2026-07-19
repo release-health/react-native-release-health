@@ -8,6 +8,8 @@ import type {
   OtaAdapterEvent,
   ReleaseHealthEvent,
   Sink,
+  SinkContext,
+  Unsubscribe,
 } from '../types';
 
 class FakeClock implements Clock {
@@ -927,5 +929,82 @@ describe('listeners and teardown', () => {
       activeUpdateId: 'update-1',
       sessionId: 'session-1',
     });
+  });
+});
+
+describe('sink attach', () => {
+  it('attaches sinks before the first event and streams status transitions', async () => {
+    const seen: string[] = [];
+    let context: SinkContext | null = null;
+    const sink: Sink = {
+      onEvent(event) {
+        if (context !== null && event.type === 'session_start') {
+          seen.push(`session_start-at-${context.getSnapshot().status}`);
+        }
+      },
+      attach(ctx) {
+        context = ctx;
+        ctx.onStatusChange(() => {
+          seen.push(ctx.getSnapshot().status);
+        });
+      },
+    };
+    const h = makeEngine({ activeUpdateId: 'update-1', sinks: [sink] });
+    h.storage.setPendingUpdate('update-1', 999);
+    await h.engine.start();
+
+    // attach happened before session_start, while status was still starting.
+    expect(seen).toEqual(['session_start-at-starting', 'probation']);
+    expect(context!.getSnapshot()).toEqual({
+      status: 'probation',
+      activeUpdateId: 'update-1',
+      sessionId: 'session-1',
+    });
+
+    h.engine.markHealthy();
+    expect(seen).toEqual(['session_start-at-starting', 'probation', 'healthy']);
+  });
+
+  it('onStatusChange unsubscribe stops further notifications', async () => {
+    const seen: string[] = [];
+    let unsubscribe: Unsubscribe | null = null;
+    const sink: Sink = {
+      onEvent() {},
+      attach(ctx) {
+        unsubscribe = ctx.onStatusChange(() => {
+          seen.push(ctx.getSnapshot().status);
+        });
+      },
+    };
+    const h = makeEngine({ activeUpdateId: 'update-1', sinks: [sink] });
+    h.storage.setPendingUpdate('update-1', 999);
+    await h.engine.start();
+    expect(seen).toEqual(['probation']);
+
+    unsubscribe!();
+    h.engine.markHealthy();
+    expect(seen).toEqual(['probation']);
+  });
+
+  it('a sink throwing from attach() warns and does not break start or other sinks', async () => {
+    const bad: Sink = {
+      onEvent() {},
+      attach() {
+        throw new Error('attach bug');
+      },
+    };
+    const attached = jest.fn();
+    const good: CaptureSink & { attach: (ctx: SinkContext) => void } = {
+      ...makeSink(),
+      attach: attached as (ctx: SinkContext) => void,
+    };
+    const h = makeEngine({ sinks: [bad, good] });
+    await h.engine.start();
+
+    expect(h.warn).toHaveBeenCalledWith(
+      expect.stringContaining('a sink threw from attach()')
+    );
+    expect(attached).toHaveBeenCalledTimes(1);
+    expect(eventTypes(good)).toEqual(['session_start']);
   });
 });
