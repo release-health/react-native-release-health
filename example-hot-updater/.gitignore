@@ -1,0 +1,5 @@
+# These folders are generated with prebuild (CNG)
+android/
+ios/
+# hot-updater
+.hot-updater/output

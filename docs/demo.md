@@ -2,6 +2,8 @@
 
 This procedure publishes an intentionally broken update to the example app with EAS Update, watches the health engine put it on probation, and shows `rollback_recommended` firing on the update's second launch. It is the acceptance test for the expo-updates adapter and the source of the README screen recording.
 
+The same procedure on hot-updater, fully local (self-hosted update server, no accounts) and extended with automatic client-side rollback: [demo-hot-updater.md](./demo-hot-updater.md).
+
 ## One-time setup (needs an Expo account)
 
 ```sh

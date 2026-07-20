@@ -1,0 +1,31 @@
+{
+  "name": "release-health-example-hot-updater",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "start": "expo start --dev-client",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
+  },
+  "dependencies": {
+    "@hot-updater/react-native": "~0.35.4",
+    "@release-health/adapter-hot-updater": "workspace:*",
+    "@release-health/sink-http": "workspace:*",
+    "expo": "~55.0.28",
+    "expo-status-bar": "~55.0.6",
+    "react": "19.2.0",
+    "react-native": "0.83.10",
+    "react-native-release-health": "workspace:*"
+  },
+  "devDependencies": {
+    "@hot-updater/expo": "~0.35.4",
+    "@hot-updater/standalone": "~0.35.4",
+    "@types/react": "~19.2.10",
+    "expo-dev-client": "~55.0.37",
+    "hot-updater": "~0.35.4",
+    "react-native-builder-bob": "^0.43.0",
+    "react-native-monorepo-config": "^0.4.0",
+    "typescript": "^6.0.3"
+  }
+}

@@ -76,3 +76,6 @@ ios/generated/
 # Demo recordings (hosted as release assets, not tracked in git)
 docs/assets/*.mov
 docs/assets/*.mp4
+
+# Local hot-updater demo server state (SQLite + stored bundles)
+scripts/hot-updater-server/data/

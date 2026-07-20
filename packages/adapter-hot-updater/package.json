@@ -1,0 +1,108 @@
+{
+  "name": "@release-health/adapter-hot-updater",
+  "version": "0.0.0",
+  "description": "hot-updater adapter for react-native-release-health: maps the hot-updater update lifecycle to the OtaAdapter contract, with client-side rollback to the embedded bundle.",
+  "main": "./lib/module/index.js",
+  "types": "./lib/typescript/src/index.d.ts",
+  "exports": {
+    ".": {
+      "react-native-release-health-source": "./src/index.ts",
+      "types": "./lib/typescript/src/index.d.ts",
+      "default": "./lib/module/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "lib",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__",
+    "!**/.*"
+  ],
+  "scripts": {
+    "clean": "del-cli lib",
+    "prepare": "bob build",
+    "typecheck": "tsc",
+    "test": "jest"
+  },
+  "keywords": [
+    "react-native",
+    "hot-updater",
+    "ota",
+    "release-health",
+    "adapter"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/release-health/react-native-release-health.git",
+    "directory": "packages/adapter-hot-updater"
+  },
+  "author": "Amrith Vengalath <amrith@vengalath.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/release-health/react-native-release-health/issues"
+  },
+  "homepage": "https://github.com/release-health/react-native-release-health#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.0",
+    "@babel/preset-env": "^7.25.0",
+    "@babel/preset-typescript": "^7.24.0",
+    "@jest/globals": "^29.7.0",
+    "del-cli": "^7.0.0",
+    "jest": "^29.7.0",
+    "react-native-builder-bob": "^0.43.0",
+    "react-native-release-health": "workspace:*",
+    "typescript": "^6.0.3"
+  },
+  "peerDependencies": {
+    "@hot-updater/react-native": ">=0.35.0",
+    "react-native-release-health": "*"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ]
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.(js|ts)$": [
+        "babel-jest",
+        {
+          "presets": [
+            [
+              "@babel/preset-env",
+              {
+                "targets": {
+                  "node": "current"
+                }
+              }
+            ],
+            "@babel/preset-typescript"
+          ]
+        }
+      ]
+    },
+    "modulePathIgnorePatterns": [
+      "<rootDir>/lib/"
+    ]
+  }
+}

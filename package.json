@@ -4,14 +4,19 @@
   "description": "Monorepo for react-native-release-health and its adapters and sinks",
   "workspaces": [
     "packages/*",
-    "example"
+    "example",
+    "example-hot-updater",
+    "scripts/hot-updater-server"
   ],
   "scripts": {
     "example": "yarn workspace react-native-release-health-example",
+    "example-hot-updater": "yarn workspace release-health-example-hot-updater",
     "core": "yarn workspace react-native-release-health",
     "sink-http": "yarn workspace @release-health/sink-http",
     "adapter-expo-updates": "yarn workspace @release-health/adapter-expo-updates",
-  "sink-sentry": "yarn workspace @release-health/sink-sentry",
+    "adapter-hot-updater": "yarn workspace @release-health/adapter-hot-updater",
+    "sink-sentry": "yarn workspace @release-health/sink-sentry",
+    "hot-updater-server": "yarn workspace release-health-hot-updater-demo-server start",
     "typecheck": "yarn workspaces foreach -A --exclude release-health-monorepo run typecheck",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "test": "yarn workspaces foreach -A --exclude release-health-monorepo run test",

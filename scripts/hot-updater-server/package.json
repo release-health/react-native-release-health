@@ -1,0 +1,17 @@
+{
+  "name": "release-health-hot-updater-demo-server",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Local demo update server for the hot-updater example. Not published; do not expose beyond localhost.",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.mjs"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.0",
+    "@hot-updater/server": "~0.35.4",
+    "better-sqlite3": "^12.0.0",
+    "hono": "^4.7.0",
+    "kysely": "^0.28.0"
+  }
+}
