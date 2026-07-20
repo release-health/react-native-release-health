@@ -48,7 +48,7 @@ await Updates.reloadAsync();
 
 ### Known limitation: server rollback-to-embedded
 
-A server rollback-to-embedded (`eas update:roll-back-to-embedded`) is delivered by staging the embedded bundle as the newest update, so expo-updates reports the embedded manifest in the downloaded slot. The adapter therefore emits one `update_downloaded` carrying the embedded bundle's update id. This is harmless: on the next launch the embedded bundle runs, the active update id is null, so nothing is put on probation, and the marker is superseded by the next real update. It does mean a rollback-to-embedded shows up in your event stream as a `update_downloaded` for the embedded id rather than as a distinct rollback event.
+A server rollback-to-embedded (`eas update:roll-back-to-embedded`) is delivered by staging the embedded bundle as the newest update, so expo-updates reports the embedded manifest in the downloaded slot. The adapter therefore emits one `update_downloaded` carrying the embedded bundle's update id. This is harmless: on the next launch the embedded bundle runs, the active update id is null, so nothing is put on probation, and the marker is superseded by the next real update. It does mean a rollback-to-embedded shows up in your event stream as a `update_downloaded` for the embedded id rather than as a distinct rollback event. More caveats like this one are collected in [docs/limitations.md](https://github.com/release-health/react-native-release-health/blob/main/docs/limitations.md).
 
 ## Options
 

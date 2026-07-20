@@ -1,0 +1,88 @@
+name: RN compat canary
+
+# Weekly check that the packages still typecheck, test, and build against the
+# latest published react-native. The example apps are pinned to their Expo SDK
+# and are deliberately not part of this: forcing a newer react-native into an
+# Expo app fails for reasons unrelated to this library.
+on:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Resolve latest react-native
+        id: rn
+        run: |
+          RN_LATEST=$(npm view react-native version)
+          echo "version=$RN_LATEST" >> "$GITHUB_OUTPUT"
+          echo "Testing against react-native@$RN_LATEST"
+
+      - name: Force react-native@latest across the workspace
+        run: |
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.resolutions = pkg.resolutions || {};
+            pkg.resolutions['react-native'] = '${{ steps.rn.outputs.version }}';
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+          yarn install --no-immutable
+
+      - name: Typecheck
+        run: yarn typecheck
+
+      - name: Test
+        run: yarn test --maxWorkers=2
+
+      - name: Build packages
+        run: yarn build
+
+      - name: Open an issue on failure
+        if: failure()
+        uses: actions/github-script@ed9a53e5b64c0405a2a4aac2c18de4b83d0a7135 # v8.0.0
+        with:
+          script: |
+            const rnVersion = '${{ steps.rn.outputs.version }}';
+            const title = `RN compat canary failing against react-native@${rnVersion}`;
+            const { data: existing } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'rn-canary',
+            });
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            if (existing.length > 0) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existing[0].number,
+                body: `Still failing against react-native@${rnVersion}: ${runUrl}`,
+              });
+              return;
+            }
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              labels: ['rn-canary'],
+              body: [
+                `The weekly canary failed against react-native@${rnVersion}.`,
+                '',
+                `Run: ${runUrl}`,
+                '',
+                'The canary forces the latest react-native via a yarn resolution and runs typecheck, tests, and the package builds. A failure here usually means an upstream API drift that will hit users on the next RN release.',
+              ].join('\n'),
+            });
