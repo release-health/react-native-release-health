@@ -140,7 +140,9 @@ jobs:
       # code and images" build phase shells out to sentry-cli to upload source
       # maps. With no Sentry org/auth configured in CI that step errors out
       # ("An organization ID or slug is required"), failing the build. CI only
-      # needs the app to compile, so skip the upload.
+      # needs the app to compile, so skip the upload. Turbo runs tasks with a
+      # strict env allowlist, so this var must also be listed in turbo.json
+      # under the build:ios task env or it never reaches the build phase.
       SENTRY_DISABLE_AUTO_UPLOAD: true
 
     steps:
