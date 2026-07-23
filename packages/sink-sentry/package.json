@@ -1,6 +1,6 @@
 {
   "name": "@release-health/sink-sentry",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Sentry sink for react-native-release-health: tags Sentry events with ota.update_id and ota.status and records OTA activity as breadcrumbs.",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",

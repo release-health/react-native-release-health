@@ -1,0 +1,76 @@
+name: Release
+
+# Publishes every non-private workspace to npm (with provenance) and creates
+# the GitHub Release when a version tag is pushed. Safe to re-run: the publish
+# script skips versions the registry already has.
+#
+# Publishing authenticates with npm trusted publishing (OIDC), not a token:
+# each package's settings on npmjs.com name this repo, this workflow file, and
+# the release environment as the trusted publisher. No NPM_TOKEN is read.
+#
+# The very first publish of a package cannot use OIDC (npm requires the package
+# to exist before a trusted publisher can be configured); that one-time bootstrap
+# runs from bootstrap-release.yml with the NPM_TOKEN secret. See that file.
+on:
+  push:
+    tags:
+      - 'v*'
+  # Retry hatch: run from the tag ref in the Actions UI if a publish attempt
+  # fails partway (the publish script skips versions already on the registry).
+  workflow_dispatch:
+
+permissions:
+  contents: write # create the GitHub Release
+  id-token: write # npm trusted publishing (OIDC) and provenance
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # The per-package trusted-publisher config on npmjs.com pins this
+    # environment name; keep the two in sync or the OIDC exchange is refused.
+    environment: release
+    steps:
+      - uses: actions/checkout@v4
+
+      # Must run before setup-node so its yarn cache detection uses Yarn 4, not the image's Yarn 1.
+      - run: corepack enable
+
+      # No registry-url input here: it writes an .npmrc _authToken line that
+      # pre-empts the OIDC exchange even when the token env var is unset
+      # (actions/setup-node#1551).
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: yarn
+
+      # Trusted publishing needs npm >= 11.5.1; the runner image's bundled npm
+      # can lag behind, so upgrade explicitly and print the version used.
+      - name: Update npm (trusted publishing needs >= 11.5.1)
+        run: |
+          npm install -g npm@latest
+          npm --version
+
+      # A stale tag (one that does not match the checked-in core version) means
+      # the versions were never bumped; fail before touching the registry. All
+      # five packages are versioned together, so core is the reference.
+      - name: Check tag matches the package version
+        run: |
+          version="$(node -p "require('./packages/core/package.json').version")"
+          if [ "${GITHUB_REF_NAME}" != "v${version}" ]; then
+            echo "tag ${GITHUB_REF_NAME} does not match react-native-release-health@${version}; run 'yarn changeset version' and retag." >&2
+            exit 1
+          fi
+
+      - run: yarn install --immutable
+
+      - run: yarn build
+
+      - name: Publish to npm
+        run: yarn release:publish
+
+      # Marked pre-release while the packages are on 0.x (beta). Drop
+      # --prerelease at 1.0.0.
+      - name: Create GitHub Release
+        run: gh release create "${GITHUB_REF_NAME}" --title "${GITHUB_REF_NAME}" --generate-notes --prerelease
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

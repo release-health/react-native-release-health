@@ -1,0 +1,54 @@
+name: Bootstrap release (one-time)
+
+# ONE-TIME bootstrap. npm trusted publishing (OIDC) cannot create a package that
+# does not exist yet, and four of the five packages here have never been
+# published. This workflow does the first publish with the NPM_TOKEN secret so
+# the packages exist on npm; after that you configure a trusted publisher for
+# each package (pointing at release.yml + the "release" environment) and every
+# subsequent release goes through release.yml with OIDC and no token.
+#
+# Once all five packages are on npm and their trusted publishers are set up,
+# DELETE this file and remove the NPM_TOKEN secret. It is intentionally
+# manual-dispatch only so it never runs on a tag.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # provenance attestations (repo is public), even with token auth
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Must run before setup-node so its yarn cache detection uses Yarn 4, not the image's Yarn 1.
+      - run: corepack enable
+
+      # registry-url writes the .npmrc _authToken line the token publish needs.
+      # This is the opposite of release.yml, which must omit it for OIDC.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: yarn
+          registry-url: 'https://registry.npmjs.org'
+
+      # publish.mjs runs `npm publish --provenance`, which needs npm >= 11.5.1.
+      - name: Update npm
+        run: |
+          npm install -g npm@latest
+          npm --version
+
+      - run: yarn install --immutable
+
+      - run: yarn build
+
+      # Publishes every non-private workspace, dependencies first, skipping any
+      # version already on the registry (so a re-run after a partial failure is
+      # safe). Auth is the NPM_TOKEN; provenance still comes from the OIDC
+      # id-token above.
+      - name: Publish to npm (token auth, one-time)
+        run: yarn release:publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,6 +1,6 @@
 {
   "name": "react-native-release-health",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Vendor-neutral OTA rollout health for React Native: session tagging, failed-update detection, and rollback recommendations.",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",

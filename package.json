@@ -23,7 +23,9 @@
     "build": "yarn workspaces foreach -A --topological-dev --exclude release-health-monorepo run prepare",
     "clean": "yarn workspaces foreach -A --exclude release-health-monorepo run clean",
     "receiver": "node scripts/event-receiver.mjs",
-    "changeset": "changeset"
+    "changeset": "changeset",
+    "publish:dry": "node scripts/publish-dry.mjs",
+    "release:publish": "node scripts/publish.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.0",

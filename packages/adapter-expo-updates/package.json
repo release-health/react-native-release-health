@@ -1,6 +1,6 @@
 {
   "name": "@release-health/adapter-expo-updates",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "expo-updates adapter for react-native-release-health: maps the expo-updates state machine to the OtaAdapter contract (recommendation-only; expo-updates has no client-side rollback API).",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",

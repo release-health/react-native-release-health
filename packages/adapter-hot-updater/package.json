@@ -1,6 +1,6 @@
 {
   "name": "@release-health/adapter-hot-updater",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "hot-updater adapter for react-native-release-health: maps the hot-updater update lifecycle to the OtaAdapter contract, with client-side rollback to the embedded bundle.",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
