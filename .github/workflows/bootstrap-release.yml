@@ -20,6 +20,10 @@ permissions:
 jobs:
   bootstrap:
     runs-on: ubuntu-latest
+    # NPM_TOKEN is an environment secret on "release" (matching the trusted
+    # publisher environment release.yml uses), not a repository secret. Without
+    # this binding the job cannot see it and secrets.NPM_TOKEN resolves empty.
+    environment: release
     steps:
       - uses: actions/checkout@v4
 
